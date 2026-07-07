@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 
 namespace jobseel.Areas.Identity.Pages.Account
 {
-    public class Register : PageModel
+    public class AdminRegister : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -30,7 +30,7 @@ namespace jobseel.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
-        public Register(
+        public AdminRegister(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
@@ -121,6 +121,7 @@ namespace jobseel.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, "Admin");
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -176,7 +177,5 @@ namespace jobseel.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<IdentityUser>)_userStore;
         }
-
-       
     }
 }
